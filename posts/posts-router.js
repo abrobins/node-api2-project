@@ -85,6 +85,9 @@ router.post("/", (req, res) => {
 // This handles the route POST /api/posts/:id/comments
 
 router.post("/:id/comments", (req, res) => {
+  const { text } = req.body;
+  const { id: post_id } = req.params;
+
   if (!req.body.text) {
     return res
       .status(400)
@@ -92,8 +95,9 @@ router.post("/:id/comments", (req, res) => {
   }
 
   posts
-    .insertComment(req.body)
+    .insertComment({ text, post_id })
     .then(comment => {
+      console.log("comment", comment);
       if (!comment.id) {
         res.status(404).json({
           message: "The post with the specified ID does not exist."
